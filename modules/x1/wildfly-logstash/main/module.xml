@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module xmlns="urn:jboss:module:1.1" name="x1.wildfly-logstash">
+    <resources>
+        <resource-root path="logstash-util-formatter-1.0-SNAPSHOT.jar" />
+    </resources>
+    <dependencies>
+        <module name="javax.json.api"/>
+    </dependencies>
+</module>
