@@ -24,7 +24,6 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <maven.compiler.target>1.7</maven.compiler.target>
     <maven.compiler.source>1.7</maven.compiler.source>
-    <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
   </properties>
   <ciManagement>
     <system>Jenkins</system>
@@ -42,12 +41,6 @@
       </notifier>
     </notifiers>
   </ciManagement>
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <maven.compiler.target>1.7</maven.compiler.target>
-    <maven.compiler.source>1.7</maven.compiler.source>
-  </properties>
   <distributionManagement>
     <site>
       <id>x1-site</id>
