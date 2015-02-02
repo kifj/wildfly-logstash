@@ -1,24 +1,24 @@
 <?xml version="1.0"?>
-<assembly xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2 http://maven.apache.org/xsd/assembly-1.1.2.xsd">
-  <id>zip</id>
-  <baseDirectory></baseDirectory>
-  <formats>
-    <format>zip</format>
-  </formats>
-  <fileSets>
-    <fileSet>
-      <filtered>true</filtered>
-      <directory>${basedir}/modules</directory>
-      <outputDirectory>/</outputDirectory>
-    </fileSet>
-  </fileSets>
-  <dependencySets>
-    <dependencySet>
-      <outputDirectory>/x1/wildfly-logstash/main</outputDirectory>
-      <includes>
-        <include>net.logstash.logging:logstash-util-formatter</include>
-      </includes>
-    </dependencySet>
-  </dependencySets>
+<assembly
+	xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2 http://maven.apache.org/xsd/assembly-1.1.2.xsd">
+	<id>zip</id>
+	<baseDirectory></baseDirectory>
+	<formats>
+		<format>zip</format>
+	</formats>
+	<fileSets>
+		<fileSet>
+			<filtered>true</filtered>
+			<directory>${basedir}/modules</directory>
+			<outputDirectory>/</outputDirectory>
+		</fileSet>
+	</fileSets>
+	<files>
+		<file>
+			<source>target/${project.build.finalName}.jar</source>
+			<outputDirectory>/x1/wildfly-logstash/main</outputDirectory>
+		</file>
+	</files>
 </assembly>
