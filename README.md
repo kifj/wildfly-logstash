@@ -38,3 +38,5 @@ input {
   }
 }
 </pre>
+
+You can define special tags by setting the system property net.logstash.logging.formatter.LogstashUtilFormatter.tags to a comma-separated list of tags.

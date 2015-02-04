@@ -29,10 +29,13 @@ import javax.json.JsonArrayBuilder;
 import javax.json.JsonBuilderFactory;
 import javax.json.JsonObjectBuilder;
 
+/**
+ * Log formatter for the JSON format used by logstash 
+ */
 public class LogstashUtilFormatter extends Formatter {
   private static final JsonBuilderFactory BUILDER = Json.createBuilderFactory(null);
   private static String hostName;
-  private static final String[] tags = System.getProperty("net.logstash.logging.formatter.LogstashUtilFormatter.tags",
+  private static final String[] TAGS = System.getProperty("net.logstash.logging.formatter.LogstashUtilFormatter.tags",
       "").split(",");
   protected static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSZZ";
 
@@ -50,7 +53,7 @@ public class LogstashUtilFormatter extends Formatter {
     final String dateString = dateFormat.format(new Date(record.getMillis()));
     final JsonArrayBuilder tagsBuilder = BUILDER.createArrayBuilder();
     boolean hasTags = false;
-    for (final String tag : tags) {
+    for (final String tag : TAGS) {
       if (!tag.isEmpty()) {
         hasTags = true;
         tagsBuilder.add(tag);
