@@ -16,7 +16,6 @@ Modify the JBoss configuration in `standalone/configuration/standalone.xml` by a
 
 /subsystem=logging/periodic-rotating-file-handler=LOGSTASH:add(\
   autoflush=true,\ 
-  level=INFO,\ 
   suffix=".yyyy-MM-dd",\ 
   append=true, \
   file={path=logstash.log, relative-to=jboss.server.log.dir})
@@ -27,7 +26,7 @@ Modify the JBoss configuration in `standalone/configuration/standalone.xml` by a
 /subsystem=logging/root-logger=ROOT:add-handler(name=LOGSTASH)
 </pre>
 
-In the logstash configuration you have to add a input configuration pointing at the outfile with format json_event.
+In the logstash shipper configuration you have to add a input configuration pointing at the outfile with format json_event.
 
 <pre>
 input {
@@ -39,4 +38,23 @@ input {
 }
 </pre>
 
-You can define special tags by setting the system property net.logstash.logging.formatter.LogstashUtilFormatter.tags to a comma-separated list of tags.
+You can define special tags by setting the system property `net.logstash.logging.formatter.LogstashUtilFormatter.tags` to a comma-separated list of tags.
+
+If you use logstash-forwarder the client side should contain a files section like this 
+
+<pre>
+{
+  "paths": [ "/opt/wildfly/standalone/log/logstash.log" ],
+  "fields": { "type": "wildfly", "format": "json_event" }
+}
+</pre>
+
+and the server configuration can filter the input depending on the incoming type
+
+<pre> 
+if [type] == "wildfly" {
+  json {
+    source => "message"
+  }
+}
+</pre>
