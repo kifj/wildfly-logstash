@@ -15,6 +15,8 @@
  */
 package net.logstash.logging.formatter;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
@@ -30,14 +32,14 @@ import javax.json.JsonBuilderFactory;
 import javax.json.JsonObjectBuilder;
 
 /**
- * Log formatter for the JSON format used by logstash 
+ * Log formatter for the JSON format used by logstash
  */
 public class LogstashUtilFormatter extends Formatter {
   private static final JsonBuilderFactory BUILDER = Json.createBuilderFactory(null);
-  private static String hostName;
-  private static final String[] TAGS = System.getProperty("net.logstash.logging.formatter.LogstashUtilFormatter.tags",
-      "").split(",");
   protected static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSZZ";
+  private static final String SYSTEM_PROPERTY_TAGS = "net.logstash.logging.formatter.LogstashUtilFormatter.tags";
+  private static final String[] TAGS = System.getProperty(SYSTEM_PROPERTY_TAGS, "").split(",");
+  private static String hostName;
 
   static {
     try {
@@ -71,23 +73,27 @@ public class LogstashUtilFormatter extends Formatter {
   @Override
   public synchronized String formatMessage(LogRecord record) {
     String format = record.getMessage();
-    final ResourceBundle resourceBundle = record.getResourceBundle();
-    if (resourceBundle != null) {
-      try {
-        format = resourceBundle.getString(format);
-      } catch (MissingResourceException e) {
-        // ignore
+    if (format != null) {
+      final ResourceBundle resourceBundle = record.getResourceBundle();
+      if (resourceBundle != null) {
+        try {
+          format = resourceBundle.getString(format);
+        } catch (MissingResourceException e) {
+          // ignore
+        }
+      }
+      Object[] parameters = record.getParameters();
+      final String msg = (parameters == null) ? String.format(format) : String.format(format, parameters);
+      if (!format.equals(msg)) {
+        record.setParameters(null);
+        record.setMessage(msg);
       }
     }
-    Object[] parameters = record.getParameters();
-    final String msg = parameters == null ? String.format(format) : String.format(format, parameters);
-    record.setParameters(null);
-    record.setMessage(msg);
     return super.formatMessage(record);
   }
 
   /**
-   * Enocde all additional fields.
+   * Encode all additional fields.
    *
    * @param record
    *          the log record
@@ -113,12 +119,13 @@ public class LogstashUtilFormatter extends Formatter {
    *          the json object builder to append
    */
   protected final void addThrowableInfo(final LogRecord record, final JsonObjectBuilder builder) {
-    if (record.getThrown() != null) {
+    Throwable t = record.getThrown();
+    if (t != null) {
       if (record.getSourceClassName() != null) {
-        builder.add("exception_class", record.getThrown().getClass().getName());
+        builder.add("exception_class", t.getClass().getName());
       }
-      if (record.getThrown().getMessage() != null) {
-        builder.add("exception_message", record.getThrown().getMessage());
+      if (t.getMessage() != null) {
+        builder.add("exception_message", t.getMessage());
       }
       addStacktraceElements(record, builder);
     }
@@ -133,8 +140,9 @@ public class LogstashUtilFormatter extends Formatter {
    */
   protected final int getLineNumber(final LogRecord record) {
     final int lineNumber;
-    if (record.getThrown() != null) {
-      lineNumber = getLineNumberFromStackTrace(record.getThrown().getStackTrace());
+    Throwable t = record.getThrown();
+    if (t != null) {
+      lineNumber = getLineNumberFromStackTrace(t.getStackTrace());
     } else {
       lineNumber = 0;
     }
@@ -175,13 +183,15 @@ public class LogstashUtilFormatter extends Formatter {
   }
 
   private void addStacktraceElements(final LogRecord record, final JsonObjectBuilder builder) {
-    final StackTraceElement[] traces = record.getThrown().getStackTrace();
-    if (traces.length > 0) {
-      StringBuilder strace = new StringBuilder();
-      for (StackTraceElement trace : traces) {
-        strace.append("\t").append(trace.toString()).append("\n");
-      }
-      builder.add("stacktrace", strace.toString());
+    Throwable t = record.getThrown();
+    // print whole stacktrace including message, class and cause
+    if (t != null && t.getStackTrace().length > 0) {
+      StringWriter sw = new StringWriter();
+      PrintWriter pw = new PrintWriter(sw);
+      pw.println();
+      t.printStackTrace(pw);
+      pw.close();
+      builder.add("stacktrace", sw.toString());
     }
   }
 }

@@ -84,12 +84,14 @@ public class LogstashUtilFormatterTest {
     fieldsBuilder.add("method", "testMethod");
     fieldsBuilder.add("exception_class", ex.getClass().getName());
     fieldsBuilder.add("exception_message", ex.getMessage());
-    fieldsBuilder.add("stacktrace", "\t" + stackTrace[0].toString() + "\n");
+    fieldsBuilder.add("stacktrace",
+        "\n" + ex.getClass().getName() + ": " + ex.getMessage() + "\n\tat " + stackTrace[0].toString() + "\n");
 
     exceptionBuilder = Json.createBuilderFactory(null).createObjectBuilder();
     exceptionBuilder.add("exception_class", ex.getClass().getName());
     exceptionBuilder.add("exception_message", ex.getMessage());
-    exceptionBuilder.add("stacktrace", "\t" + stackTrace[0].toString() + "\n");
+    exceptionBuilder.add("stacktrace", "\n" + ex.getClass().getName() + ": " + ex.getMessage() + "\n\tat "
+        + stackTrace[0].toString() + "\n");
 
     builder.add("@fields", fieldsBuilder);
 
