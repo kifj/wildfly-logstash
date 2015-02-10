@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!-- see http://findbugs.sourceforge.net/manual/filter.html -->
+
+<FindBugsFilter>
+  <Match classregex="x1.*">
+   <BugPattern name="DM_CONVERT_CASE"/>
+  </Match>
+
+  <Match classregex="x1.*" >
+    <BugPattern name="SIC_INNER_SHOULD_BE_STATIC_ANON" />
+  </Match>
+  
+  <Match classregex="x1.*" >
+    <BugPattern name="EI_EXPOSE_REP2" />
+  </Match>
+
+  <Match classregex="x1.*" >
+    <BugPattern name="EI_EXPOSE_REP" />
+  </Match>
+
+  <Match classregex="x1.*" >
+    <BugPattern name="UWF_FIELD_NOT_INITIALIZED_IN_CONSTRUCTOR" />
+  </Match>
+  
+  <Match classregex="x1.*" >
+    <BugPattern name="RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE" />
+  </Match>
+  
+  <Match classregex="x1.*" >
+    <BugPattern name="MTIA_SUSPECT_SERVLET_INSTANCE_FIELD" />
+  </Match>
+
+  <Match classregex="x1.*" >
+    <BugPattern name="SE_TRANSIENT_FIELD_NOT_RESTORED" />
+  </Match>
+
+  <Match classregex="x1.*" >
+    <BugPattern name="MSF_MUTABLE_SERVLET_FIELD" />
+  </Match>
+
+  <Match classregex="x1.*" >
+    <BugPattern name="SE_BAD_FIELD" />
+  </Match>
+</FindBugsFilter>
