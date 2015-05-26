@@ -17,6 +17,7 @@ package net.logstash.logging.formatter;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.MissingResourceException;
@@ -29,8 +30,10 @@ import javax.json.JsonArrayBuilder;
 import javax.json.JsonBuilderFactory;
 import javax.json.JsonObjectBuilder;
 
+import org.jboss.logmanager.ExtLogRecord;
+
 /**
- * Log formatter for the JSON format used by logstash 
+ * Log formatter for the JSON format used by logstash
  */
 public class LogstashUtilFormatter extends Formatter {
   private static final JsonBuilderFactory BUILDER = Json.createBuilderFactory(null);
@@ -49,9 +52,9 @@ public class LogstashUtilFormatter extends Formatter {
 
   @Override
   public final String format(final LogRecord record) {
-    final SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
-    final String dateString = dateFormat.format(new Date(record.getMillis()));
-    final JsonArrayBuilder tagsBuilder = BUILDER.createArrayBuilder();
+    SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
+    String dateString = dateFormat.format(new Date(record.getMillis()));
+    JsonArrayBuilder tagsBuilder = BUILDER.createArrayBuilder();
     boolean hasTags = false;
     for (final String tag : TAGS) {
       if (!tag.isEmpty()) {
@@ -71,7 +74,7 @@ public class LogstashUtilFormatter extends Formatter {
   @Override
   public synchronized String formatMessage(LogRecord record) {
     String format = record.getMessage();
-    final ResourceBundle resourceBundle = record.getResourceBundle();
+    ResourceBundle resourceBundle = record.getResourceBundle();
     if (resourceBundle != null) {
       try {
         format = resourceBundle.getString(format);
@@ -80,7 +83,22 @@ public class LogstashUtilFormatter extends Formatter {
       }
     }
     Object[] parameters = record.getParameters();
-    final String msg = parameters == null ? String.format(format) : String.format(format, parameters);
+    String msg = format;
+    if (record instanceof ExtLogRecord) {
+      ExtLogRecord extLogRecord = (ExtLogRecord) record;
+      switch (extLogRecord.getFormatStyle()) {
+      case MESSAGE_FORMAT:
+        msg = format.indexOf('{') >= 0 ? MessageFormat.format(format, parameters) : format;
+        break;
+      case PRINTF:
+        msg = (parameters == null) ? String.format(format) : String.format(format, parameters);
+        break;
+      case NO_FORMAT:
+        break;
+      }
+    } else {
+      msg = format.indexOf('{') >= 0 ? MessageFormat.format(format, parameters) : format;
+    }
     record.setParameters(null);
     record.setMessage(msg);
     return super.formatMessage(record);
@@ -175,7 +193,7 @@ public class LogstashUtilFormatter extends Formatter {
   }
 
   private void addStacktraceElements(final LogRecord record, final JsonObjectBuilder builder) {
-    final StackTraceElement[] traces = record.getThrown().getStackTrace();
+    StackTraceElement[] traces = record.getThrown().getStackTrace();
     if (traces.length > 0) {
       StringBuilder strace = new StringBuilder();
       for (StackTraceElement trace : traces) {
