@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>x1.jboss</groupId>
     <artifactId>wildfly-logstash</artifactId>
-    <version>1.0.1-SNAPSHOT</version>
+    <version>1.0.2-SNAPSHOT</version>
     <name>wildfly-logstash</name>
     <description>Logstash appender for JBoss Wildfly</description>
     <url>https://github.com/kifj/wildfly-logstash</url>
@@ -217,6 +217,12 @@
             <artifactId>javax.json-api</artifactId>
             <version>1.0</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.logmanager</groupId>
+            <artifactId>jboss-logmanager</artifactId>
+            <version>1.5.2.Final</version>
+            <scope>provided</scope>            
         </dependency>
         <dependency>
             <groupId>junit</groupId>

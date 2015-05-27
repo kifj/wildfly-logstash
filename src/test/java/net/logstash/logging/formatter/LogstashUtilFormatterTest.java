@@ -29,6 +29,8 @@ import javax.json.JsonObjectBuilder;
 
 import static org.junit.Assert.*;
 
+import org.jboss.logmanager.ExtLogRecord;
+import org.jboss.logmanager.ExtLogRecord.FormatStyle;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -228,11 +230,18 @@ public class LogstashUtilFormatterTest {
    */
   @Test
   public void testAddParameter() {
-    Locale.setDefault(Locale.US);
-    record.setMessage("Junit Test [%d] [%s] [%f]");
-    record.setParameters(new Object[] { 1, "2", 3.0f });
+    Locale.setDefault(Locale.US);  
     fullLogMessage = fullLogMessage.replace("Junit Test", "Junit Test [1] [2] [3.000000]");
-    String result = instance.format(record);
+    ExtLogRecord extLogRecord = new ExtLogRecord(record.getLevel(), "Junit Test [%d] [%s] [%f]", FormatStyle.PRINTF, 
+        record.getLoggerName());
+    extLogRecord.setParameters(new Object[] { 1, "2", 3.0f });
+    extLogRecord.setSourceClassName(record.getSourceClassName());
+    extLogRecord.setSourceMethodName(record.getSourceMethodName());
+    extLogRecord.setLoggerName(record.getLoggerName());
+    extLogRecord.setMillis(record.getMillis());
+    extLogRecord.setThrown(record.getThrown());
+    
+    String result = instance.format(extLogRecord);
     assertEquals(fullLogMessage, result);
   }
 }
