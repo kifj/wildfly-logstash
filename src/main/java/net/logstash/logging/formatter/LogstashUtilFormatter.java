@@ -97,6 +97,8 @@ public class LogstashUtilFormatter extends Formatter {
         break;
       case NO_FORMAT:
         break;
+      default:
+        break;
       }
     } else {
       msg = format.indexOf('{') >= 0 ? MessageFormat.format(format, parameters) : format;
