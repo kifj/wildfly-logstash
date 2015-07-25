@@ -5,7 +5,11 @@ Logstash module for JBoss Wildfly, using https://github.com/SYNAXON/logstash-uti
 
 Compile the jar file with maven: `mvn package`
 
+To create a ZIP file containing the module: `mvn package -P zip`
+
 Unzip the archive created in the `target/zip` folder at `$JBOSS_HOME/modules/system/layers/base`.
+
+To create a RPM package containing the module: `mvn package -P rpm
 
 Modify the JBoss configuration in `standalone/configuration/standalone.xml` by adding a formatter to the logging configuration and reference the formatter in the handler.
 
