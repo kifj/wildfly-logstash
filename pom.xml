@@ -90,7 +90,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>findbugs-maven-plugin</artifactId>
-                <version>3.0.1</version>
+                <version>3.0.3</version>
             </plugin>
             <plugin>
                 <groupId>org.jacoco</groupId>
@@ -115,7 +115,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.18.1</version>
+                <version>2.19</version>
                 <configuration>
                     <systemPropertyVariables>
                         <jacoco-agent.destfile>target/jacoco.exec</jacoco-agent.destfile>
@@ -162,7 +162,7 @@
                          <plugin>
                             <groupId>org.apache.maven.plugins</groupId>
                             <artifactId>maven-surefire-report-plugin</artifactId>
-                            <version>2.18.1</version>
+                            <version>2.19</version>
                             <configuration>
                                 <testFailureIgnore>true</testFailureIgnore>
                             </configuration>
@@ -177,7 +177,7 @@
                         <plugin>
                             <groupId>org.codehaus.mojo</groupId>
                             <artifactId>findbugs-maven-plugin</artifactId>
-                            <version>3.0.1</version>
+                            <version>3.0.3</version>
                             <configuration>
                                 <xmlOutput>true</xmlOutput>
                                 <excludeFilterFile>findbugs-exclude.xml</excludeFilterFile>
@@ -243,7 +243,7 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.11</version>
+            <version>4.12</version>
             <scope>test</scope>
         </dependency>
         <dependency>
