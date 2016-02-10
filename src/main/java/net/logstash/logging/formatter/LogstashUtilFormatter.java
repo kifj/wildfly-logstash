@@ -76,6 +76,9 @@ public class LogstashUtilFormatter extends Formatter {
   @Override
   public synchronized String formatMessage(LogRecord record) {
     String format = record.getMessage();
+    if (format == null) {
+      return null;
+    }
     ResourceBundle resourceBundle = record.getResourceBundle();
     if (resourceBundle != null) {
       try {
