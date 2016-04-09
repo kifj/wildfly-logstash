@@ -22,6 +22,7 @@ import java.net.UnknownHostException;
 import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 import java.util.logging.Formatter;
@@ -57,18 +58,31 @@ public class LogstashUtilFormatter extends Formatter {
     SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
     String dateString = dateFormat.format(new Date(record.getMillis()));
     JsonArrayBuilder tagsBuilder = BUILDER.createArrayBuilder();
+    JsonObjectBuilder mdcBuilder = BUILDER.createObjectBuilder();
     boolean hasTags = false;
+    boolean hasMDC = false;
     for (final String tag : TAGS) {
       if (!tag.isEmpty()) {
         hasTags = true;
         tagsBuilder.add(tag);
       }
     }
+    if (record instanceof ExtLogRecord) {
+      ExtLogRecord extLogRecord = (ExtLogRecord) record; 
+      for (Map.Entry<String, String> entry : extLogRecord.getMdcCopy().entrySet()) {
+        hasMDC = true;
+        mdcBuilder.add(entry.getKey(), entry.getValue());
+      }
+    }
+    
     String message = formatMessage(record);
     JsonObjectBuilder builder = BUILDER.createObjectBuilder().add("@timestamp", dateString).add("@message", message)
         .add("@source", record.getLoggerName()).add("@source_host", hostName).add("@fields", encodeFields(record));
     if (hasTags) {
       builder.add("@tags", tagsBuilder.build());
+    }
+    if (hasMDC) {
+      builder.add("@mdc", mdcBuilder.build());
     }
     return builder.build().toString() + "\n";
   }
@@ -90,7 +104,7 @@ public class LogstashUtilFormatter extends Formatter {
     Object[] parameters = record.getParameters();
     String msg = format;
     if (record instanceof ExtLogRecord) {
-      ExtLogRecord extLogRecord = (ExtLogRecord) record;
+      ExtLogRecord extLogRecord = (ExtLogRecord) record;      
       switch (extLogRecord.getFormatStyle()) {
       case MESSAGE_FORMAT:
         msg = format.indexOf('{') >= 0 ? MessageFormat.format(format, parameters) : format;
