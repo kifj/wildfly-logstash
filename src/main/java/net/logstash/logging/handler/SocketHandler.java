@@ -146,15 +146,8 @@ public class SocketHandler extends ExtHandler {
 
   @Override
   protected void doPublish(final ExtLogRecord record) {
-    final String formatted;
-    final Formatter formatter = getFormatter();
-    try {
-      formatted = formatter.format(record);
-    } catch (Exception e) {
-      reportError("Could not format message", e, ErrorManager.FORMAT_FAILURE);
-      return;
-    }
-    if (formatted.isEmpty()) {
+    final String formatted = createFormattedMessage(record);
+    if (formatted == null || formatted.isEmpty()) {
       // nothing to write; move along
       return;
     }
@@ -176,18 +169,32 @@ public class SocketHandler extends ExtHandler {
         super.doPublish(record);
       }
     } catch (Exception e) {
-      Handler[] handlers = getHandlers();
-      if (handlers.length > 0) {
-        // if we have a subhandler it will publish the record of the failed
-        // transmission (to disk)
-        for (Handler h : getHandlers()) {
-          h.publish(record);
-        }
-      } else {
-        reportError("Error writing log message", e, ErrorManager.WRITE_FAILURE);
-      }
-      closeSockerHandler();
+      handleExceptionOnPublish(record, e);
     }
+  }
+  
+  private String createFormattedMessage(final ExtLogRecord record) {
+    final Formatter formatter = getFormatter();
+    try {
+      return formatter.format(record);
+    } catch (Exception e) {
+      reportError("Could not format message", e, ErrorManager.FORMAT_FAILURE);
+      return null;
+    }
+  }
+
+  private void handleExceptionOnPublish(final ExtLogRecord record, Exception e) {
+    Handler[] handlers = getHandlers();
+    if (handlers.length > 0) {
+      // if we have a subhandler it will publish the record of the failed
+      // transmission (to disk)
+      for (Handler h : getHandlers()) {
+        h.publish(record);
+      }
+    } else {
+      reportError("Error writing log message", e, ErrorManager.WRITE_FAILURE);
+    }
+    closeSockerHandler();
   }
 
   @Override

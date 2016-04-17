@@ -71,7 +71,7 @@ public class LogstashUtilFormatter extends ExtFormatter {
       mdcBuilder.add(entry.getKey(), entry.getValue());
     }
 
-    String message = formatMessage(record);
+    String message = formatExtRecord(record);
     JsonObjectBuilder builder = BUILDER.createObjectBuilder().add("@timestamp", dateString).add("@message", message)
         .add("@source", record.getLoggerName()).add("@source_host", hostName).add("@fields", encodeFields(record));
     if (hasTags) {
@@ -83,8 +83,41 @@ public class LogstashUtilFormatter extends ExtFormatter {
     return builder.build().toString() + "\n";
   }
 
+  private String formatExtRecord(final ExtLogRecord record) {
+    String format = getMessageFormat(record);
+    Object[] parameters = record.getParameters();
+    String msg;
+    switch (record.getFormatStyle()) {
+    case MESSAGE_FORMAT:
+      msg = format.indexOf('{') >= 0 ? MessageFormat.format(format, parameters) : format;
+      break;
+    case PRINTF:
+      msg = (parameters == null) ? String.format(format) : String.format(format, parameters);
+      break;
+    case NO_FORMAT:
+    default:
+      msg = format;
+      break;
+    }
+    record.setParameters(null);
+    record.setMessage(msg);
+    return super.formatMessage(record);    
+  }
+  
   @Override
-  public synchronized String formatMessage(LogRecord record) {
+  public synchronized String formatMessage(final LogRecord record) {
+    if (record instanceof ExtLogRecord) {
+      return formatExtRecord((ExtLogRecord)record);
+    }
+    String format = getMessageFormat(record);
+    Object[] parameters = record.getParameters();
+    String msg = format.indexOf('{') >= 0 ? MessageFormat.format(format, parameters) : format;
+    record.setParameters(null);
+    record.setMessage(msg);
+    return super.formatMessage(record);
+  }
+
+  private String getMessageFormat(LogRecord record) {
     String format = record.getMessage();
     if (format == null) {
       return null;
@@ -97,30 +130,9 @@ public class LogstashUtilFormatter extends ExtFormatter {
         // ignore
       }
     }
-    Object[] parameters = record.getParameters();
-    String msg = format;
-    if (record instanceof ExtLogRecord) {
-      ExtLogRecord extLogRecord = (ExtLogRecord) record;
-      switch (extLogRecord.getFormatStyle()) {
-      case MESSAGE_FORMAT:
-        msg = format.indexOf('{') >= 0 ? MessageFormat.format(format, parameters) : format;
-        break;
-      case PRINTF:
-        msg = (parameters == null) ? String.format(format) : String.format(format, parameters);
-        break;
-      case NO_FORMAT:
-        break;
-      default:
-        break;
-      }
-    } else {
-      msg = format.indexOf('{') >= 0 ? MessageFormat.format(format, parameters) : format;
-    }
-    record.setParameters(null);
-    record.setMessage(msg);
-    return super.formatMessage(record);
+    return format;
   }
-
+  
   /**
    * Encode all additional fields.
    *
