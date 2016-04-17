@@ -1,7 +1,7 @@
 wildfly-logstash
 ================
 
-Logstash module for JBoss Wildfly, using https://github.com/SYNAXON/logstash-util-formatter as formatter.
+Logstash module for JBoss Wildfly, using https://github.com/SYNAXON/logstash-util-formatter as formatter. The Socker Appender is based on jboss-logmanager-ext (https://github.com/jamezp/jboss-logmanager-ext). Both deserve credits for the original work. This module has been tested with Wildfly 8, 9 and 10. 
 
 Compile the jar file with maven: `mvn package`
 
@@ -61,4 +61,25 @@ if [type] == "wildfly" {
     source => "message"
   }
 }
+</pre>
+
+Instead of writing to file, you can also enable direct sending of log messages to logstash.
+You need to setup a logstash input plugin for TCP with json codec.
+
+<pre>
+input {
+  tcp {
+    codec => "json"
+    port => 9996
+  }
+}
+</pre>
+
+The logging configuration for Wildfly needs to be adapted with a custom handler, setting the hostname and port to the values needed for your logstash server. The file handler with the JSON output is set as subHandler to the new handler. This handler will be used if server is not available (with a retry every 5 seconds). We wrap everything in an async-handler which will queue up the logging events and pushes them asynchronously. If the transport is blocked or slow this will not cause trouble to the application. The async-handler will be used in the logger configuration.
+
+<pre>
+/subsystem=logging/custom-handler=LOGSTASH-SOCKET:add(level=DEBUG, class=net.logstash.logging.handler.SocketHandler,module=x1.wildfly-logstash,named-formatter=LOGSTASH-PATTERN,properties={protocol=TCP, hostname=logstash, port=9996, subHandler=LOGSTASH})
+/subsystem=logging/custom-handler=LOGSTASH-SOCKET:add-handler(LOGSTASH)
+/subsystem=logging/async-handler=LOGSTASH-ASYNC:add(queue-length=512, subhandlers=[LOGSTASH-SOCKET])
+/subsystem=logging/root-logger=ROOT:add-handler(name=LOGSTASH-ASYNC)
 </pre>

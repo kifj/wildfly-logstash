@@ -4,7 +4,7 @@
 		<resource-root path="${project.build.finalName}.jar" />
 	</resources>
 	<dependencies>
-        <module name="org.jboss.logmanager" />
+		<module name="org.jboss.logmanager" />
 		<module name="org.jboss.logging" />
 		<module name="javax.json.api" />
 	</dependencies>

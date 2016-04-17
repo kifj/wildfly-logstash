@@ -1,6 +1,4 @@
-/*
- * Copyright 2013 karl spies.
- *
+/**
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -25,7 +23,6 @@ import java.util.Date;
 import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
-import java.util.logging.Formatter;
 import java.util.logging.LogRecord;
 
 import javax.json.Json;
@@ -33,12 +30,13 @@ import javax.json.JsonArrayBuilder;
 import javax.json.JsonBuilderFactory;
 import javax.json.JsonObjectBuilder;
 
+import org.jboss.logmanager.ExtFormatter;
 import org.jboss.logmanager.ExtLogRecord;
 
 /**
  * Log formatter for the JSON format used by logstash
  */
-public class LogstashUtilFormatter extends Formatter {
+public class LogstashUtilFormatter extends ExtFormatter {
   private static final JsonBuilderFactory BUILDER = Json.createBuilderFactory(null);
   protected static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSZZ";
   private static final String SYSTEM_PROPERTY_TAGS = "net.logstash.logging.formatter.LogstashUtilFormatter.tags";
@@ -54,7 +52,7 @@ public class LogstashUtilFormatter extends Formatter {
   }
 
   @Override
-  public final String format(final LogRecord record) {
+  public final String format(final ExtLogRecord record) {
     SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
     String dateString = dateFormat.format(new Date(record.getMillis()));
     JsonArrayBuilder tagsBuilder = BUILDER.createArrayBuilder();
@@ -67,17 +65,18 @@ public class LogstashUtilFormatter extends Formatter {
         tagsBuilder.add(tag);
       }
     }
-    if (record instanceof ExtLogRecord) {
-      ExtLogRecord extLogRecord = (ExtLogRecord) record; 
-      for (Map.Entry<String, String> entry : extLogRecord.getMdcCopy().entrySet()) {
-        hasMDC = true;
-        mdcBuilder.add(entry.getKey(), entry.getValue());
-      }
+
+    for (Map.Entry<String, String> entry : record.getMdcCopy().entrySet()) {
+      hasMDC = true;
+      mdcBuilder.add(entry.getKey(), entry.getValue());
     }
-    
+
     String message = formatMessage(record);
-    JsonObjectBuilder builder = BUILDER.createObjectBuilder().add("@timestamp", dateString).add("@message", message)
-        .add("@source", record.getLoggerName()).add("@source_host", hostName).add("@fields", encodeFields(record));
+    JsonObjectBuilder builder = BUILDER.createObjectBuilder().add("@timestamp", dateString)
+        .add("@message", message)
+        .add("@source", record.getLoggerName())
+        .add("@source_host", hostName)
+        .add("@fields", encodeFields(record));
     if (hasTags) {
       builder.add("@tags", tagsBuilder.build());
     }
@@ -104,7 +103,7 @@ public class LogstashUtilFormatter extends Formatter {
     Object[] parameters = record.getParameters();
     String msg = format;
     if (record instanceof ExtLogRecord) {
-      ExtLogRecord extLogRecord = (ExtLogRecord) record;      
+      ExtLogRecord extLogRecord = (ExtLogRecord) record;
       switch (extLogRecord.getFormatStyle()) {
       case MESSAGE_FORMAT:
         msg = format.indexOf('{') >= 0 ? MessageFormat.format(format, parameters) : format;
@@ -225,6 +224,39 @@ public class LogstashUtilFormatter extends Formatter {
       t.printStackTrace(pw);
       pw.close();
       builder.add("stacktrace", sw.toString());
+    }
+  }
+
+  /**
+   * Indicates whether or not pretty printing is enabled.
+   *
+   * @return {@code true} if pretty printing is enabled, otherwise {@code false}
+   */
+  @SuppressWarnings("unchecked")
+  public boolean isPrettyPrint() {
+    Map<String, Object> config = (Map<String, Object>) BUILDER.getConfigInUse();
+    synchronized (config) {
+      return (config.containsKey(javax.json.stream.JsonGenerator.PRETTY_PRINTING)
+          ? (Boolean) config.get(javax.json.stream.JsonGenerator.PRETTY_PRINTING) : false);
+    }
+  }
+
+  /**
+   * Turns on or off pretty printing.
+   *
+   * @param b
+   *          {@code true} to turn on pretty printing or {@code false} to turn
+   *          it off
+   */
+  @SuppressWarnings("unchecked")
+  public void setPrettyPrint(final boolean b) {
+    Map<String, Object> config = (Map<String, Object>) BUILDER.getConfigInUse();
+    synchronized (config) {
+      if (b) {
+        config.put(javax.json.stream.JsonGenerator.PRETTY_PRINTING, Boolean.TRUE);
+      } else {
+        config.remove(javax.json.stream.JsonGenerator.PRETTY_PRINTING);
+      }
     }
   }
 }
