@@ -72,11 +72,8 @@ public class LogstashUtilFormatter extends ExtFormatter {
     }
 
     String message = formatMessage(record);
-    JsonObjectBuilder builder = BUILDER.createObjectBuilder().add("@timestamp", dateString)
-        .add("@message", message)
-        .add("@source", record.getLoggerName())
-        .add("@source_host", hostName)
-        .add("@fields", encodeFields(record));
+    JsonObjectBuilder builder = BUILDER.createObjectBuilder().add("@timestamp", dateString).add("@message", message)
+        .add("@source", record.getLoggerName()).add("@source_host", hostName).add("@fields", encodeFields(record));
     if (hasTags) {
       builder.add("@tags", tagsBuilder.build());
     }
@@ -236,8 +233,8 @@ public class LogstashUtilFormatter extends ExtFormatter {
   public boolean isPrettyPrint() {
     Map<String, Object> config = (Map<String, Object>) BUILDER.getConfigInUse();
     synchronized (config) {
-      return (config.containsKey(javax.json.stream.JsonGenerator.PRETTY_PRINTING)
-          ? (Boolean) config.get(javax.json.stream.JsonGenerator.PRETTY_PRINTING) : false);
+      return config.containsKey(javax.json.stream.JsonGenerator.PRETTY_PRINTING)
+          ? (Boolean) config.get(javax.json.stream.JsonGenerator.PRETTY_PRINTING) : false;
     }
   }
 

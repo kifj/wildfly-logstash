@@ -160,12 +160,10 @@ public class SocketHandler extends ExtHandler {
     }
     try {
       synchronized (this) {
-        if (initialize) {
-          if (em.lastExceptionTimestamp < System.currentTimeMillis() - 5000) {
-            initialize();
-            if (em.lastException == null) {
-              initialize = false;
-            }
+        if (initialize && (em.lastExceptionTimestamp < System.currentTimeMillis() - 5000)) {
+          initialize();
+          if (em.lastException == null) {
+            initialize = false;
           }
         }
         if (writer == null) {
@@ -180,7 +178,8 @@ public class SocketHandler extends ExtHandler {
     } catch (Exception e) {
       Handler[] handlers = getHandlers();
       if (handlers.length > 0) {
-        // if we have a subhandler it will publish the record of the failed transmission (to disk)
+        // if we have a subhandler it will publish the record of the failed
+        // transmission (to disk)
         for (Handler h : getHandlers()) {
           h.publish(record);
         }
@@ -200,7 +199,7 @@ public class SocketHandler extends ExtHandler {
   }
 
   @Override
-  public void close() throws SecurityException {
+  public void close() {
     closeSockerHandler();
     super.close();
   }
@@ -311,7 +310,7 @@ public class SocketHandler extends ExtHandler {
     }
   }
 
-  public Handler getSubHandler(final Handler handler) {
+  public Handler getSubHandler() {
     Handler[] handlers = getHandlers();
     return (handlers.length == 0) ? null : handlers[0];
   }
