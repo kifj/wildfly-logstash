@@ -37,9 +37,9 @@ import org.jboss.logmanager.ExtLogRecord;
  * Log formatter for the JSON format used by logstash
  */
 public class LogstashUtilFormatter extends ExtFormatter {
+  public static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSZZ";
+  public static final String SYSTEM_PROPERTY_TAGS = LogstashUtilFormatter.class.getName() + ".tags";
   private static final JsonBuilderFactory BUILDER = Json.createBuilderFactory(null);
-  protected static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSZZ";
-  private static final String SYSTEM_PROPERTY_TAGS = "net.logstash.logging.formatter.LogstashUtilFormatter.tags";
   private static final String[] TAGS = System.getProperty(SYSTEM_PROPERTY_TAGS, "").split(",");
   private static String hostName;
 
@@ -59,7 +59,7 @@ public class LogstashUtilFormatter extends ExtFormatter {
     JsonObjectBuilder mdcBuilder = BUILDER.createObjectBuilder();
     boolean hasTags = false;
     boolean hasMDC = false;
-    for (final String tag : TAGS) {
+    for (String tag : TAGS) {
       if (!tag.isEmpty()) {
         hasTags = true;
         tagsBuilder.add(tag);

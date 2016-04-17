@@ -180,6 +180,7 @@ public class SocketHandler extends ExtHandler {
     } catch (Exception e) {
       Handler[] handlers = getHandlers();
       if (handlers.length > 0) {
+        // if we have a subhandler it will publish the record of the failed transmission (to disk)
         for (Handler h : getHandlers()) {
           h.publish(record);
         }
@@ -312,12 +313,10 @@ public class SocketHandler extends ExtHandler {
 
   public Handler getSubHandler(final Handler handler) {
     Handler[] handlers = getHandlers();
-    if (handlers.length == 0) {
-      return null;
-    }
-    return handlers[0];
+    return (handlers.length == 0) ? null : handlers[0];
   }
 
+  /** internal ErrorManager with timestamps */
   private static class TransportErrorManager extends ErrorManager {
     private Exception lastException;
     private long lastExceptionTimestamp = 0;
@@ -367,11 +366,13 @@ public class SocketHandler extends ExtHandler {
   private OutputStream createOutputStream() {
     if (address != null || port >= 0) {
       try {
-        if (protocol == Protocol.SSL_TCP) {
+        switch (protocol) {
+        case SSL_TCP:
           return new SslTcpOutputStream(address, port);
-        } else if (protocol == Protocol.UDP) {
+        case UDP:
           return new UdpOutputStream(address, port);
-        } else {
+        case TCP:
+        default:
           return new TcpOutputStream(address, port);
         }
       } catch (IOException e) {
@@ -407,7 +408,8 @@ public class SocketHandler extends ExtHandler {
         c.close();
     } catch (Exception e) {
       reportError("Error closing resource", e, ErrorManager.CLOSE_FAILURE);
-    } catch (Throwable ignored) {
+    } catch (Throwable t) {
+      // ignored
     }
   }
 
@@ -417,7 +419,8 @@ public class SocketHandler extends ExtHandler {
         f.flush();
     } catch (Exception e) {
       reportError("Error on flush", e, ErrorManager.FLUSH_FAILURE);
-    } catch (Throwable ignored) {
+    } catch (Throwable t) {
+      // ignored
     }
   }
 }
