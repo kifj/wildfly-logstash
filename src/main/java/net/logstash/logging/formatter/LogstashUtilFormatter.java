@@ -40,7 +40,6 @@ public class LogstashUtilFormatter extends ExtFormatter {
   public static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSZZ";
   public static final String SYSTEM_PROPERTY_TAGS = LogstashUtilFormatter.class.getName() + ".tags";
   private static final JsonBuilderFactory BUILDER = Json.createBuilderFactory(null);
-  private static final String[] TAGS = System.getProperty(SYSTEM_PROPERTY_TAGS, "").split(",");
   private static String hostName;
 
   static {
@@ -55,32 +54,43 @@ public class LogstashUtilFormatter extends ExtFormatter {
   public final String format(final ExtLogRecord record) {
     SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
     String dateString = dateFormat.format(new Date(record.getMillis()));
-    JsonArrayBuilder tagsBuilder = BUILDER.createArrayBuilder();
-    JsonObjectBuilder mdcBuilder = BUILDER.createObjectBuilder();
-    boolean hasTags = false;
-    boolean hasMDC = false;
-    for (String tag : TAGS) {
-      if (!tag.isEmpty()) {
-        hasTags = true;
-        tagsBuilder.add(tag);
-      }
-    }
 
-    for (Map.Entry<String, String> entry : record.getMdcCopy().entrySet()) {
-      hasMDC = true;
-      mdcBuilder.add(entry.getKey(), entry.getValue());
-    }
 
     String message = formatExtRecord(record);
     JsonObjectBuilder builder = BUILDER.createObjectBuilder().add("@timestamp", dateString).add("@message", message)
         .add("@source", record.getLoggerName()).add("@source_host", hostName).add("@fields", encodeFields(record));
-    if (hasTags) {
-      builder.add("@tags", tagsBuilder.build());
+
+    addTags(builder);
+    addMDC(record, builder);
+    return builder.build().toString() + "\n";
+  }
+
+  private void addMDC(final ExtLogRecord record, JsonObjectBuilder builder) {
+    boolean hasMDC = false;
+    JsonObjectBuilder mdcBuilder = BUILDER.createObjectBuilder();
+    for (Map.Entry<String, String> entry : record.getMdcCopy().entrySet()) {
+      hasMDC = true;
+      mdcBuilder.add(entry.getKey(), entry.getValue());
     }
     if (hasMDC) {
       builder.add("@mdc", mdcBuilder.build());
     }
-    return builder.build().toString() + "\n";
+  }
+
+  private void addTags(JsonObjectBuilder builder) {
+    String tags = System.getProperty(SYSTEM_PROPERTY_TAGS);
+    if (tags != null) {
+      JsonArrayBuilder tagsBuilder = BUILDER.createArrayBuilder();
+      int last = 0;
+      int index = tags.indexOf(',');
+      while (index > 0) {
+          tagsBuilder.add(tags.substring(last, index));
+          last = index + 1;
+          index = tags.indexOf(',', last);          
+      }
+      tagsBuilder.add(tags.substring(last, tags.length()));      
+      builder.add("@tags", tagsBuilder.build());
+    }
   }
 
   private String formatExtRecord(final ExtLogRecord record) {
