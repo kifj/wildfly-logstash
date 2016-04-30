@@ -41,7 +41,7 @@ public class LogstashUtilFormatter extends ExtFormatter {
   public static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSZZ";
   public static final String SYSTEM_PROPERTY_TAGS = LogstashUtilFormatter.class.getName() + ".tags";
   private static final Map<String, Object> CONFIG = new HashMap<>();
-  private static JsonBuilderFactory BUILDER = Json.createBuilderFactory(CONFIG);
+  private static JsonBuilderFactory jsonBuilder = Json.createBuilderFactory(CONFIG);
   private static String hostName;
 
   static {
@@ -59,7 +59,7 @@ public class LogstashUtilFormatter extends ExtFormatter {
 
 
     String message = formatExtRecord(record);
-    JsonObjectBuilder builder = BUILDER.createObjectBuilder().add("@timestamp", dateString).add("@message", message)
+    JsonObjectBuilder builder = jsonBuilder.createObjectBuilder().add("@timestamp", dateString).add("@message", message)
         .add("@source", record.getLoggerName()).add("@source_host", hostName).add("@fields", encodeFields(record));
 
     addTags(builder);
@@ -69,7 +69,7 @@ public class LogstashUtilFormatter extends ExtFormatter {
 
   private void addMDC(final ExtLogRecord record, JsonObjectBuilder builder) {
     boolean hasMDC = false;
-    JsonObjectBuilder mdcBuilder = BUILDER.createObjectBuilder();
+    JsonObjectBuilder mdcBuilder = jsonBuilder.createObjectBuilder();
     for (Map.Entry<String, String> entry : record.getMdcCopy().entrySet()) {
       hasMDC = true;
       mdcBuilder.add(entry.getKey(), entry.getValue());
@@ -82,7 +82,7 @@ public class LogstashUtilFormatter extends ExtFormatter {
   private void addTags(JsonObjectBuilder builder) {
     String tags = System.getProperty(SYSTEM_PROPERTY_TAGS);
     if (tags != null) {
-      JsonArrayBuilder tagsBuilder = BUILDER.createArrayBuilder();
+      JsonArrayBuilder tagsBuilder = jsonBuilder.createArrayBuilder();
       int last = 0;
       int index = tags.indexOf(',');
       while (index > 0) {
@@ -153,7 +153,7 @@ public class LogstashUtilFormatter extends ExtFormatter {
    * @return objectBuilder
    */
   protected final JsonObjectBuilder encodeFields(final LogRecord record) {
-    JsonObjectBuilder builder = BUILDER.createObjectBuilder();
+    JsonObjectBuilder builder = jsonBuilder.createObjectBuilder();
     builder.add("timestamp", record.getMillis());
     builder.add("level", record.getLevel().toString());
     builder.add("line_number", getLineNumber(record));
@@ -255,7 +255,7 @@ public class LogstashUtilFormatter extends ExtFormatter {
    */
   @SuppressWarnings("unchecked")
   public boolean isPrettyPrint() {
-    Map<String, Object> config = (Map<String, Object>) BUILDER.getConfigInUse();
+    Map<String, Object> config = (Map<String, Object>) jsonBuilder.getConfigInUse();
     synchronized (config) {
       return config.containsKey(javax.json.stream.JsonGenerator.PRETTY_PRINTING)
           ? (Boolean) config.get(javax.json.stream.JsonGenerator.PRETTY_PRINTING) : false;
@@ -276,7 +276,7 @@ public class LogstashUtilFormatter extends ExtFormatter {
       } else {
         CONFIG.remove(javax.json.stream.JsonGenerator.PRETTY_PRINTING);
       }
-      BUILDER = Json.createBuilderFactory(CONFIG);
+      jsonBuilder = Json.createBuilderFactory(CONFIG);
     }
   }
 }
