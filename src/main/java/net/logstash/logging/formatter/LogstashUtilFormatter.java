@@ -20,6 +20,7 @@ import java.net.UnknownHostException;
 import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
@@ -39,7 +40,8 @@ import org.jboss.logmanager.ExtLogRecord;
 public class LogstashUtilFormatter extends ExtFormatter {
   public static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSZZ";
   public static final String SYSTEM_PROPERTY_TAGS = LogstashUtilFormatter.class.getName() + ".tags";
-  private static final JsonBuilderFactory BUILDER = Json.createBuilderFactory(null);
+  private static final Map<String, Object> CONFIG = new HashMap<>();
+  private static JsonBuilderFactory BUILDER = Json.createBuilderFactory(CONFIG);
   private static String hostName;
 
   static {
@@ -267,15 +269,14 @@ public class LogstashUtilFormatter extends ExtFormatter {
    *          {@code true} to turn on pretty printing or {@code false} to turn
    *          it off
    */
-  @SuppressWarnings("unchecked")
   public void setPrettyPrint(final boolean b) {
-    Map<String, Object> config = (Map<String, Object>) BUILDER.getConfigInUse();
-    synchronized (config) {
+    synchronized (CONFIG) {
       if (b) {
-        config.put(javax.json.stream.JsonGenerator.PRETTY_PRINTING, Boolean.TRUE);
+        CONFIG.put(javax.json.stream.JsonGenerator.PRETTY_PRINTING, Boolean.TRUE);
       } else {
-        config.remove(javax.json.stream.JsonGenerator.PRETTY_PRINTING);
+        CONFIG.remove(javax.json.stream.JsonGenerator.PRETTY_PRINTING);
       }
+      BUILDER = Json.createBuilderFactory(CONFIG);
     }
   }
 }
