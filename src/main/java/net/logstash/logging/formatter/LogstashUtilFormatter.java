@@ -101,7 +101,7 @@ public class LogstashUtilFormatter extends ExtFormatter {
     String msg;
     switch (record.getFormatStyle()) {
     case MESSAGE_FORMAT:
-      msg = format.indexOf('{') >= 0 ? MessageFormat.format(format, parameters) : format;
+      msg = format.indexOf("{0") >= 0 ? MessageFormat.format(format, parameters) : format;
       break;
     case PRINTF:
       msg = (parameters == null) ? String.format(format) : String.format(format, parameters);
