@@ -57,8 +57,10 @@ public class LogstashUtilFormatter extends ExtFormatter {
     SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
     String dateString = dateFormat.format(new Date(record.getMillis()));
 
-
     String message = formatExtRecord(record);
+    if (message == null) {
+      return null;
+    }
     JsonObjectBuilder builder = jsonBuilder.createObjectBuilder().add("@timestamp", dateString).add("@message", message)
         .add("@source", record.getLoggerName()).add("@source_host", hostName).add("@fields", encodeFields(record));
 
@@ -86,17 +88,20 @@ public class LogstashUtilFormatter extends ExtFormatter {
       int last = 0;
       int index = tags.indexOf(',');
       while (index > 0) {
-          tagsBuilder.add(tags.substring(last, index));
-          last = index + 1;
-          index = tags.indexOf(',', last);          
+        tagsBuilder.add(tags.substring(last, index));
+        last = index + 1;
+        index = tags.indexOf(',', last);
       }
-      tagsBuilder.add(tags.substring(last, tags.length()));      
+      tagsBuilder.add(tags.substring(last, tags.length()));
       builder.add("@tags", tagsBuilder.build());
     }
   }
 
   private String formatExtRecord(final ExtLogRecord record) {
     String format = getMessageFormat(record);
+    if (format == null) {
+      return super.formatMessage(record);
+    }
     Object[] parameters = record.getParameters();
     String msg;
     switch (record.getFormatStyle()) {
@@ -113,13 +118,13 @@ public class LogstashUtilFormatter extends ExtFormatter {
     }
     record.setParameters(null);
     record.setMessage(msg);
-    return super.formatMessage(record);    
+    return super.formatMessage(record);
   }
-  
+
   @Override
   public synchronized String formatMessage(final LogRecord record) {
     if (record instanceof ExtLogRecord) {
-      return formatExtRecord((ExtLogRecord)record);
+      return formatExtRecord((ExtLogRecord) record);
     }
     String format = getMessageFormat(record);
     Object[] parameters = record.getParameters();
@@ -144,7 +149,7 @@ public class LogstashUtilFormatter extends ExtFormatter {
     }
     return format;
   }
-  
+
   /**
    * Encode all additional fields.
    *
