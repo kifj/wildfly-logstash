@@ -374,12 +374,18 @@ public class SocketHandler extends ExtHandler {
       try {
         switch (protocol) {
         case SSL_TCP:
-          return new SslTcpOutputStream(address, port);
+          SslTcpOutputStream sos = new SslTcpOutputStream(address, port);
+          if (sos.isConnected()) {
+            return sos;
+          }
         case UDP:
           return new UdpOutputStream(address, port);
         case TCP:
         default:
-          return new TcpOutputStream(address, port);
+          TcpOutputStream tos = new TcpOutputStream(address, port);
+          if (tos.isConnected()) {
+            return tos;
+          }
         }
       } catch (IOException e) {
         reportError("Failed to create socket output stream", e, ErrorManager.OPEN_FAILURE);
