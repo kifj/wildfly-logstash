@@ -194,7 +194,7 @@ public class SocketHandler extends ExtHandler {
     } else {
       reportError("Error writing log message", e, ErrorManager.WRITE_FAILURE);
     }
-    closeSockerHandler();
+    closeSocketHandler();
   }
 
   @Override
@@ -207,11 +207,11 @@ public class SocketHandler extends ExtHandler {
 
   @Override
   public void close() {
-    closeSockerHandler();
+    closeSocketHandler();
     super.close();
   }
 
-  private void closeSockerHandler() {
+  private void closeSocketHandler() {
     checkAccess(this);
     synchronized (this) {
       safeClose(writer);
