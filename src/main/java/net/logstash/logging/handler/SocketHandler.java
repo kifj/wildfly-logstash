@@ -351,11 +351,7 @@ public class SocketHandler extends ExtHandler {
       }
       final String encoding = getEncoding();
       final UninterruptibleOutputStream outputStream = new UninterruptibleOutputStream(out);
-      if (encoding == null) {
-        writer = new OutputStreamWriter(outputStream);
-      } else {
-        writer = new OutputStreamWriter(outputStream, encoding);
-      }
+      writer = new OutputStreamWriter(outputStream, (encoding != null) ? encoding : "UTF-8");
       writeHead(writer);
       okay = true;
     } catch (UnsupportedEncodingException e) {
