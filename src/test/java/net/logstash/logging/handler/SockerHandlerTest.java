@@ -1,6 +1,6 @@
 package net.logstash.logging.handler;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.io.ByteArrayOutputStream;
 import java.util.logging.Level;
@@ -21,6 +21,12 @@ public class SockerHandlerTest {
       handler.setLevel(Level.FINE);
       handler.setAutoFlush(true);
       handler.setFormatter(new LogstashUtilFormatter());
+      
+      assertEquals(Protocol.TCP, handler.getProtocol());
+      assertEquals(5555, handler.getPort());
+      assertEquals("127.0.0.1", handler.getAddress().getHostAddress());
+      handler.setPort(5556);
+      assertEquals(5556, handler.getPort());
 
       ConsoleHandler target = new ConsoleHandler();
       target.setAutoFlush(true);
@@ -28,6 +34,7 @@ public class SockerHandlerTest {
       target.setOutputStream(os);
       target.setFormatter(new LogstashUtilFormatter());
       handler.setSubHandler(target);
+      assertEquals(target, handler.getSubHandler());
 
       ExtLogRecord record = new ExtLogRecord(Level.FINE, "test", this.getClass().getName());
       record.setLoggerName("testSocketHandler");
