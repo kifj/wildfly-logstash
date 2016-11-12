@@ -10,7 +10,7 @@
   <inceptionYear>2015</inceptionYear>
   <scm>
     <url>https://github.com/kifj/wildfly-logstash</url>
-    <connection>scm:git:https://github.com/kifj/wildfly-logstash.git</connection>
+    <connection>scm:git:git@github.com:kifj/wildfly-logstash.git</connection>
     <tag>HEAD</tag>
   </scm>
   <licenses>
