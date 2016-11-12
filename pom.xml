@@ -1,9 +1,8 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>x1.jboss</groupId>
   <artifactId>wildfly-logstash</artifactId>
-  <version>1.0.5-SNAPSHOT</version>
+  <version>1.0.5</version>
   <name>wildfly-logstash</name>
   <description>Logstash appender for JBoss Wildfly</description>
   <url>https://github.com/kifj/wildfly-logstash</url>
@@ -11,7 +10,7 @@
   <scm>
     <url>https://github.com/kifj/wildfly-logstash</url>
     <connection>scm:git:git@github.com:kifj/wildfly-logstash.git</connection>
-    <tag>HEAD</tag>
+    <tag>wildfly-logstash-1.0.5</tag>
   </scm>
   <licenses>
     <license>
