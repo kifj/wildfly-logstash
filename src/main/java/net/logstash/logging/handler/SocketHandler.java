@@ -374,6 +374,7 @@ public class SocketHandler extends ExtHandler {
           if (sos.isConnected()) {
             return sos;
           }
+	  break;
         case UDP:
           return new UdpOutputStream(address, port);
         case TCP:
@@ -382,6 +383,7 @@ public class SocketHandler extends ExtHandler {
           if (tos.isConnected()) {
             return tos;
           }
+	  break;
         }
       } catch (IOException e) {
         reportError("Failed to create socket output stream", e, ErrorManager.OPEN_FAILURE);
