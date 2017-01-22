@@ -90,7 +90,7 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>findbugs-maven-plugin</artifactId>
-        <version>3.0.3</version>
+        <version>3.0.4</version>
       </plugin>
       <plugin>
         <groupId>org.jacoco</groupId>
@@ -177,7 +177,7 @@
             <plugin>
               <groupId>org.codehaus.mojo</groupId>
               <artifactId>findbugs-maven-plugin</artifactId>
-              <version>3.0.3</version>
+              <version>3.0.4</version>
               <configuration>
                 <xmlOutput>true</xmlOutput>
                 <excludeFilterFile>findbugs-exclude.xml</excludeFilterFile>
