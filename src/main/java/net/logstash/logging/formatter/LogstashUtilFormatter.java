@@ -66,7 +66,7 @@ public class LogstashUtilFormatter extends ExtFormatter {
 
     addTags(builder);
     addMDC(record, builder);
-    return builder.build().toString() + "\n";
+    return builder.build().toString() + System.lineSeparator();
   }
 
   private void addMDC(final ExtLogRecord record, JsonObjectBuilder builder) {

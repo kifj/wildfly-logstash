@@ -43,6 +43,7 @@ public class LogstashUtilFormatterTest {
   private JsonObjectBuilder exceptionBuilder;
   private Exception ex;
   private static String hostName;
+  private static final String LINE_BREAK = System.lineSeparator();
 
   static {
     System.setProperty("net.logstash.logging.formatter.LogstashUtilFormatter.tags", "foo,bar");
@@ -84,14 +85,14 @@ public class LogstashUtilFormatterTest {
     fieldsBuilder.add("method", "testMethod");
     fieldsBuilder.add("exception_class", ex.getClass().getName());
     fieldsBuilder.add("exception_message", ex.getMessage());
-    fieldsBuilder.add("stacktrace",
-        "\n" + ex.getClass().getName() + ": " + ex.getMessage() + "\n\tat " + stackTrace[0].toString() + "\n");
+    fieldsBuilder.add("stacktrace", LINE_BREAK + ex.getClass().getName() + ": " + ex.getMessage() + LINE_BREAK + "\tat "
+        + stackTrace[0].toString() + LINE_BREAK);
 
     exceptionBuilder = Json.createBuilderFactory(null).createObjectBuilder();
     exceptionBuilder.add("exception_class", ex.getClass().getName());
     exceptionBuilder.add("exception_message", ex.getMessage());
-    exceptionBuilder.add("stacktrace", "\n" + ex.getClass().getName() + ": " + ex.getMessage() + "\n\tat "
-        + stackTrace[0].toString() + "\n");
+    exceptionBuilder.add("stacktrace", LINE_BREAK + ex.getClass().getName() + ": " + ex.getMessage() + LINE_BREAK
+        + "\tat " + stackTrace[0].toString() + LINE_BREAK);
 
     builder.add("@fields", fieldsBuilder);
 
@@ -100,7 +101,7 @@ public class LogstashUtilFormatterTest {
     tagsBuilder.add("bar");
     builder.add("@tags", tagsBuilder.build());
 
-    fullLogMessage = builder.build().toString() + "\n";
+    fullLogMessage = builder.build().toString() + LINE_BREAK;
   }
 
   /**
@@ -149,8 +150,8 @@ public class LogstashUtilFormatterTest {
     JsonObjectBuilder result = Json.createBuilderFactory(null).createObjectBuilder();
     record.getThrown().setStackTrace(new StackTraceElement[0]);
     instance.addThrowableInfo(record, result);
-    assertEquals("{\"exception_class\":\"java.lang.Exception\",\"exception_message\":\"That is an exception\"}", result
-        .build().toString());
+    assertEquals("{\"exception_class\":\"java.lang.Exception\",\"exception_message\":\"That is an exception\"}",
+        result.build().toString());
   }
 
   /**
@@ -228,9 +229,9 @@ public class LogstashUtilFormatterTest {
    */
   @Test
   public void testAddParameter() {
-    Locale.setDefault(Locale.US);  
+    Locale.setDefault(Locale.US);
     fullLogMessage = fullLogMessage.replace("Junit Test", "Junit Test [1] [2] [3.000000]");
-    ExtLogRecord extLogRecord = new ExtLogRecord(record.getLevel(), "Junit Test [%d] [%s] [%f]", FormatStyle.PRINTF, 
+    ExtLogRecord extLogRecord = new ExtLogRecord(record.getLevel(), "Junit Test [%d] [%s] [%f]", FormatStyle.PRINTF,
         record.getLoggerName());
     extLogRecord.setParameters(new Object[] { 1, "2", 3.0f });
     extLogRecord.setSourceClassName(record.getSourceClassName());
@@ -238,7 +239,7 @@ public class LogstashUtilFormatterTest {
     extLogRecord.setLoggerName(record.getLoggerName());
     extLogRecord.setMillis(record.getMillis());
     extLogRecord.setThrown(record.getThrown());
-    
+
     String result = instance.format(extLogRecord);
     assertEquals(fullLogMessage, result);
   }
