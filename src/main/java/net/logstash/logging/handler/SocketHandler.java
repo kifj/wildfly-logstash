@@ -172,7 +172,7 @@ public class SocketHandler extends ExtHandler {
       handleExceptionOnPublish(record, e);
     }
   }
-  
+
   private String createFormattedMessage(final ExtLogRecord record) {
     final Formatter formatter = getFormatter();
     try {
@@ -374,7 +374,7 @@ public class SocketHandler extends ExtHandler {
           if (sos.isConnected()) {
             return sos;
           }
-	  break;
+          break;
         case UDP:
           return new UdpOutputStream(address, port);
         case TCP:
@@ -383,7 +383,7 @@ public class SocketHandler extends ExtHandler {
           if (tos.isConnected()) {
             return tos;
           }
-	  break;
+          break;
         }
       } catch (IOException e) {
         reportError("Failed to create socket output stream", e, ErrorManager.OPEN_FAILURE);
