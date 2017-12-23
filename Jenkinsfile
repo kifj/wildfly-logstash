@@ -1,10 +1,5 @@
 pipeline {
-  agent {
-    node {
-      label 'local'
-    }
-    
-  }
+  agent none
   stages {
     stage('Checkout') {
       steps {
