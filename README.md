@@ -1,7 +1,7 @@
 wildfly-logstash
 ================
 
-Logstash module for JBoss Wildfly, using https://github.com/SYNAXON/logstash-util-formatter as formatter. The Socker Appender is based on jboss-logmanager-ext (https://github.com/jamezp/jboss-logmanager-ext). Both deserve credits for the original work. This module has been tested with Wildfly 8, 9 and 10. 
+Logstash module for Wildfly, using https://github.com/SYNAXON/logstash-util-formatter as formatter. The SocketAppender is based on jboss-logmanager-ext (https://github.com/jamezp/jboss-logmanager-ext). Both deserve credits for the original work. This module has been tested with Wildfly 8 to 11. 
 
 Compile the jar file with maven: `mvn package`
 
