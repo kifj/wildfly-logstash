@@ -85,7 +85,7 @@
     <plugins>
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.7.0</version>
+        <version>3.8.0</version>
       </plugin>
       <plugin>
         <groupId>com.github.spotbugs</groupId>
@@ -137,7 +137,7 @@
       <extension>
         <groupId>org.apache.maven.wagon</groupId>
         <artifactId>wagon-webdav-jackrabbit</artifactId>
-        <version>3.0.0</version>
+        <version>3.1.0</version>
       </extension>
     </extensions>
   </build>
@@ -191,8 +191,7 @@
       </plugin>
       <plugin>
         <groupId>com.github.spotbugs</groupId>
-        <artifactId>spotbugs-maven-plugin</artifactId>
-        <version>3.1.6</version>
+        <artifactId>spotbugs-maven-plugin</artifactId>        
         <configuration>
           <xmlOutput>true</xmlOutput>
           <excludeFilterFile>findbugs-exclude.xml</excludeFilterFile>
