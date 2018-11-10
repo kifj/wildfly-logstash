@@ -395,8 +395,9 @@ public class SocketHandler extends ExtHandler {
   private void writeHead(final Writer writer) {
     try {
       final Formatter formatter = getFormatter();
-      if (formatter != null)
+      if (formatter != null) {
         writer.write(formatter.getHead(this));
+      }
     } catch (Exception e) {
       reportError("Error writing section header", e, ErrorManager.WRITE_FAILURE);
     }
@@ -405,8 +406,9 @@ public class SocketHandler extends ExtHandler {
   private void writeTail(final Writer writer) {
     try {
       final Formatter formatter = getFormatter();
-      if (formatter != null)
+      if (formatter != null) {
         writer.write(formatter.getTail(this));
+      }
     } catch (Exception ex) {
       reportError("Error writing section tail", ex, ErrorManager.WRITE_FAILURE);
     }
@@ -414,8 +416,9 @@ public class SocketHandler extends ExtHandler {
 
   private void safeClose(Closeable c) {
     try {
-      if (c != null)
+      if (c != null) {
         c.close();
+      }
     } catch (Exception e) {
       reportError("Error closing resource", e, ErrorManager.CLOSE_FAILURE);
     } catch (Throwable t) {
@@ -425,8 +428,9 @@ public class SocketHandler extends ExtHandler {
 
   private void safeFlush(Flushable f) {
     try {
-      if (f != null)
+      if (f != null) {
         f.flush();
+      }
     } catch (Exception e) {
       reportError("Error on flush", e, ErrorManager.FLUSH_FAILURE);
     } catch (Throwable t) {

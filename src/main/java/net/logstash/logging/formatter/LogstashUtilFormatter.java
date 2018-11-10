@@ -263,7 +263,7 @@ public class LogstashUtilFormatter extends ExtFormatter {
     Map<String, Object> config = (Map<String, Object>) jsonBuilder.getConfigInUse();
     synchronized (config) {
       return config.containsKey(javax.json.stream.JsonGenerator.PRETTY_PRINTING)
-          ? (Boolean) config.get(javax.json.stream.JsonGenerator.PRETTY_PRINTING) : false;
+          && (Boolean) config.get(javax.json.stream.JsonGenerator.PRETTY_PRINTING);
     }
   }
 
@@ -271,8 +271,8 @@ public class LogstashUtilFormatter extends ExtFormatter {
    * Turns on or off pretty printing.
    *
    * @param b
-   *          {@code true} to turn on pretty printing or {@code false} to turn
-   *          it off
+   *          {@code true} to turn on pretty printing or {@code false} to turn it
+   *          off
    */
   public void setPrettyPrint(final boolean b) {
     synchronized (CONFIG) {
