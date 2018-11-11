@@ -23,6 +23,6 @@ pipeline {
     }
   }
   environment {
-    mvnHome = tool 'Maven-3.5'
+    mvnHome = tool 'Maven-3.6'
   }
 }
