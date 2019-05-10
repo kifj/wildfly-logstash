@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>x1.wildfly</groupId>
   <artifactId>wildfly-logstash</artifactId>
-  <version>1.0.6</version>
+  <version>1.0.7-SNAPSHOT</version>
   <name>wildfly-logstash</name>
   <description>Logstash appender for JBoss Wildfly</description>
   <url>https://github.com/kifj/wildfly-logstash</url>
@@ -10,7 +10,7 @@
   <scm>
     <url>https://github.com/kifj/wildfly-logstash</url>
     <connection>scm:git:git@github.com:kifj/wildfly-logstash.git</connection>
-    <tag>wildfly-logstash-1.0.6</tag>
+    <tag>HEAD</tag>
   </scm>
   <licenses>
     <license>
