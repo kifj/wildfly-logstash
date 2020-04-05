@@ -77,16 +77,7 @@ public class LogstashUtilFormatterTest {
     builder.add("@source", LogstashUtilFormatter.class.getName());
     builder.add("@source_host", hostName);
 
-    fieldsBuilder = Json.createBuilderFactory(null).createObjectBuilder();
-    fieldsBuilder.add("timestamp", millis);
-    fieldsBuilder.add("level", Level.ALL.toString());
-    fieldsBuilder.add("line_number", LINE_NUMBER);
-    fieldsBuilder.add("class", LogstashUtilFormatter.class.getName());
-    fieldsBuilder.add("method", "testMethod");
-    fieldsBuilder.add("exception_class", ex.getClass().getName());
-    fieldsBuilder.add("exception_message", ex.getMessage());
-    fieldsBuilder.add("stacktrace", LINE_BREAK + ex.getClass().getName() + ": " + ex.getMessage() + LINE_BREAK + "\tat "
-        + stackTrace[0].toString() + LINE_BREAK);
+    fieldsBuilder = createFieldsBuilder(millis, stackTrace);
 
     exceptionBuilder = Json.createBuilderFactory(null).createObjectBuilder();
     exceptionBuilder.add("exception_class", ex.getClass().getName());
@@ -94,7 +85,7 @@ public class LogstashUtilFormatterTest {
     exceptionBuilder.add("stacktrace", LINE_BREAK + ex.getClass().getName() + ": " + ex.getMessage() + LINE_BREAK
         + "\tat " + stackTrace[0].toString() + LINE_BREAK);
 
-    builder.add("@fields", fieldsBuilder);
+    builder.add("@fields", createFieldsBuilder(millis, stackTrace));
 
     JsonArrayBuilder tagsBuilder = Json.createArrayBuilder();
     tagsBuilder.add("foo");
@@ -102,6 +93,20 @@ public class LogstashUtilFormatterTest {
     builder.add("@tags", tagsBuilder.build());
 
     fullLogMessage = builder.build().toString() + LINE_BREAK;
+  }
+  
+  private JsonObjectBuilder createFieldsBuilder(long millis, StackTraceElement[] stackTrace) {
+    JsonObjectBuilder builder = Json.createBuilderFactory(null).createObjectBuilder();
+    builder.add("timestamp", millis);
+    builder.add("level", Level.ALL.toString());
+    builder.add("line_number", LINE_NUMBER);
+    builder.add("class", LogstashUtilFormatter.class.getName());
+    builder.add("method", "testMethod");
+    builder.add("exception_class", ex.getClass().getName());
+    builder.add("exception_message", ex.getMessage());
+    builder.add("stacktrace", LINE_BREAK + ex.getClass().getName() + ": " + ex.getMessage() + LINE_BREAK + "\tat "
+        + stackTrace[0].toString() + LINE_BREAK);
+    return builder;
   }
 
   /**
