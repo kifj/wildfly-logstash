@@ -68,6 +68,13 @@
 
     <module name="FileLength"/>
 
+    <!-- Checks for Size Violations.                    -->
+    <!-- See http://checkstyle.sf.net/config_sizes.html -->
+    <module name="LineLength">
+        <property name="max" value="130"/>
+        <property name="ignorePattern" value="^ *\* *[^ ]+$"/>
+    </module>
+
     <module name="TreeWalker">
         <property name="tabWidth" value="4"/>
 
@@ -77,10 +84,6 @@
         	<property name="scope" value="package" />
         	<property name="allowMissingParamTags" value="true" />
         	<property name="allowMissingReturnTag" value="true" />
-        	<property name="allowMissingThrowsTags" value="true" />
-        	<!-- property name="logLoadErrors" value="true" / -->
-        	<property name="suppressLoadErrors" value="true" />
-            <property name="allowMissingJavadoc" value="true" />
         </module>
         <module name="JavadocType"/>
         <!--
@@ -138,13 +141,6 @@
         <module name="RedundantImport"/>
         <module name="UnusedImports"/>
 
-
-        <!-- Checks for Size Violations.                    -->
-        <!-- See http://checkstyle.sf.net/config_sizes.html -->
-        <module name="LineLength">
-            <property name="max" value="130"/>
-            <property name="ignorePattern" value="^ *\* *[^ ]+$"/>
-        </module>
         <module name="MethodLength"/>
         <module name="ParameterNumber"/>
 
