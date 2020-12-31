@@ -1,3 +1,5 @@
+[![Actions Status](https://github.com/kifj/wildfly-logstash/workflows/Java%20CI/badge.svg)](https://github.com/kifj/wildfly-logstash/actions) ![Licence](https://img.shields.io/github/license/kifj/wildfly-logstash) ![Issues](https://img.shields.io/github/issues/kifj/wildfly-logstash) ![Stars](https://img.shields.io/github/stars/kifj/wildfly-logstash)
+
 wildfly-logstash
 ================
 
