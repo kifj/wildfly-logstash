@@ -7,7 +7,7 @@ pipeline {
   stages {
     stage('Checkout') {
       steps {
-        git(url: 'https://github.com/kifj/wildfly-logstash.git', branch: 'master', changelog: true)
+        checkout scm
       }
     }
     stage('Build') {
