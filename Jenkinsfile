@@ -21,6 +21,9 @@ pipeline {
       }
     }
     stage('Sonar') {
+      tools {
+        jdk "JDK-11"
+      }
       steps {
         sh 'mvn sonar:sonar -DskipTests -Dsonar.java.coveragePlugin=jacoco -Dsonar.jacoco.reportPath=target/jacoco.exec -Dsonar.host.url=https://www.x1/sonar'
       }
