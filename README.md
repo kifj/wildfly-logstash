@@ -32,6 +32,8 @@ Modify the JBoss configuration in `standalone/configuration/standalone.xml` by a
 /subsystem=logging/root-logger=ROOT:add-handler(name=LOGSTASH)
 </pre>
 
+You can define special tags by setting the system property `net.logstash.logging.formatter.LogstashUtilFormatter.tags` to a comma-separated list of tags.
+
 In the logstash shipper configuration you have to add a input configuration pointing at the outfile with format json_event.
 
 <pre>
@@ -39,34 +41,26 @@ input {
   file {
     type => "wildfly-server"
     path => "/opt/wildfly/standalone/log/logstash.log"
-    format => "json_event"
+    codec => "json"
   }
 }
 </pre>
 
-You can define special tags by setting the system property `net.logstash.logging.formatter.LogstashUtilFormatter.tags` to a comma-separated list of tags.
-
-If you use logstash-forwarder the client side should contain a files section like this 
+If you use filebeat to ship the logfiles it should contain a files section like this
 
 <pre>
-{
-  "paths": [ "/opt/wildfly/standalone/log/logstash.log" ],
-  "fields": { "type": "wildfly", "format": "json_event" }
-}
+- type: log
+  enabled: true
+  paths:
+    - /opt/wildfly/standalone/log/logstash.log
+  ignore_older: 24h
+  json.keys_under_root: true
+  json.add_error_key: true
+  fields:
+    type: wildfly
 </pre>
 
-and the server configuration can filter the input depending on the incoming type
-
-<pre> 
-if [type] == "wildfly" {
-  json {
-    source => "message"
-  }
-}
-</pre>
-
-Instead of writing to file, you can also enable direct sending of log messages to logstash.
-You need to setup a logstash input plugin for TCP with json codec.
+Instead of writing to file, you can also enable direct sending of log messages to logstash. You need to setup a logstash input plugin for TCP with json codec.
 
 <pre>
 input {
