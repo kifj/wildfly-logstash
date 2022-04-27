@@ -62,6 +62,7 @@ public class SocketHandler extends ExtHandler {
 
   // All the following fields are guarded by this
   private InetAddress address;
+  private String hostName;
   private int port;
   private Protocol protocol;
   private Writer writer;
@@ -252,9 +253,17 @@ public class SocketHandler extends ExtHandler {
    * @throws UnknownHostException
    *           if an error occurs resolving the address
    */
-  public void setHostname(final String hostname) throws UnknownHostException {
+  public void setHostname(final String hostname) {
     checkAccess(this);
-    setAddress(InetAddress.getByName(hostname));
+
+    try {
+        setAddress(InetAddress.getByName(hostname));
+    } catch (UnknownHostException uhe) {
+        this.address = null;
+        this.hostName = hostname;
+
+        reportError(uhe.getMessage(), uhe, ErrorManager.OPEN_FAILURE);
+    }
   }
 
   /**
@@ -366,6 +375,10 @@ public class SocketHandler extends ExtHandler {
   }
 
   private OutputStream createOutputStream() {
+    if (address == null) {
+      setHostname(hostName);
+    }
+
     if (address != null || port >= 0) {
       try {
         switch (protocol) {
