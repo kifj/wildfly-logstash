@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>x1.wildfly</groupId>
   <artifactId>wildfly-logstash</artifactId>
-  <version>1.0.10-SNAPSHOT</version>
+  <version>1.0.9-SNAPSHOT</version>
   <name>wildfly-logstash</name>
   <description>Logstash appender for JBoss Wildfly</description>
   <url>https://github.com/kifj/wildfly-logstash</url>
