@@ -4,7 +4,7 @@
   <artifactId>wildfly-logstash</artifactId>
   <version>1.0.10-SNAPSHOT</version>
   <name>wildfly-logstash</name>
-  <description>Logstash appender for JBoss Wildfly</description>
+  <description>Logstash / Filebeat appender for JBoss Wildfly</description>
   <url>https://github.com/kifj/wildfly-logstash</url>
   <inceptionYear>2015</inceptionYear>
   <scm>
@@ -354,5 +354,20 @@
         </plugins>
       </build>
     </profile>
+    <profile>
+       <id>github</id>
+       <distributionManagement>
+         <repository>
+           <id>github</id>
+           <name>GitHub kifj Apache Maven Packages</name>
+           <url>https://maven.pkg.github.com/kifj/wildfly-logstash</url>
+         </repository>
+         <snapshotRepository>
+           <id>github-snapshots</id>
+           <name>GitHub kifj Apache Maven Packages</name>
+           <url>https://maven.pkg.github.com/kifj/wildfly-logstash</url>
+         </snapshotRepository>
+       </distributionManagement>
+     </profile>
   </profiles>
 </project>
