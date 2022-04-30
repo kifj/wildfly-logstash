@@ -249,9 +249,6 @@ public class SocketHandler extends ExtHandler {
    *
    * @param hostname
    *          the host name used to resolve the address
-   *
-   * @throws UnknownHostException
-   *           if an error occurs resolving the address
    */
   public void setHostname(final String hostname) {
     checkAccess(this);
@@ -261,7 +258,6 @@ public class SocketHandler extends ExtHandler {
     } catch (UnknownHostException uhe) {
         this.address = null;
         this.hostName = hostname;
-
         reportError(uhe.getMessage(), uhe, ErrorManager.OPEN_FAILURE);
     }
   }
