@@ -39,7 +39,7 @@ In the logstash shipper configuration you have to add a input configuration poin
 <pre>
 input {
   file {
-    type => "wildfly-server"
+    type => "wildfly"
     path => "/opt/wildfly/standalone/log/logstash.log"
     codec => "json"
   }
