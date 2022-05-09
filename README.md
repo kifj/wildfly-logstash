@@ -34,7 +34,7 @@ Modify the JBoss configuration in `standalone/configuration/standalone.xml` by a
 
 You can define special tags by setting the system property `net.logstash.logging.formatter.LogstashUtilFormatter.tags` to a comma-separated list of tags.
 
-In the logstash shipper configuration you have to add a input configuration pointing at the outfile with format json_event.
+In the logstash shipper configuration you have to add a input configuration pointing at the outfile with code json.
 
 <pre>
 input {
@@ -45,6 +45,8 @@ input {
   }
 }
 </pre>
+
+If logstash is running in a docker container, you need to mount the log file into the container.
 
 If you use filebeat to ship the logfiles it should contain a files section like this
 
