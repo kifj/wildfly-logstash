@@ -1,7 +1,7 @@
 pipeline {
   agent any
   tools {
-    maven 'Maven-3.6'
+    maven 'Maven-3.8'
     jdk 'JDK-1.8'
   }
   stages {
@@ -12,7 +12,12 @@ pipeline {
     }
     stage('Build') {
       steps {
-        sh 'mvn clean package'
+        try {
+          sh 'mvn clean package'
+        } finally {
+          junit '**/target/surefire-reports/TEST-*.xml'
+          jacoco(execPattern: '**/**.exec')
+        }
       }
     }
     stage('Publish') {
