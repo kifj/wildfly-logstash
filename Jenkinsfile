@@ -12,12 +12,7 @@ pipeline {
     }
     stage('Build') {
       steps {
-        try {
-          sh 'mvn clean package'
-        } finally {
-          junit '**/target/surefire-reports/TEST-*.xml'
-          jacoco(execPattern: '**/**.exec')
-        }
+        sh 'mvn clean package'
       }
     }
     stage('Publish') {
@@ -32,6 +27,12 @@ pipeline {
       steps {
         sh 'mvn sonar:sonar -DskipTests -Dsonar.java.coveragePlugin=jacoco -Dsonar.jacoco.reportPath=target/jacoco.exec -Dsonar.host.url=https://www.x1/sonar'
       }
+    }
+  }
+  post {
+    always {
+      junit '**/target/surefire-reports/TEST-*.xml'
+      jacoco(execPattern: '**/**.exec')
     }
   }
 }
