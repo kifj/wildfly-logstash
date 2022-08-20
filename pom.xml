@@ -90,7 +90,7 @@
       <plugin>
         <groupId>com.github.spotbugs</groupId>
         <artifactId>spotbugs-maven-plugin</artifactId>
-        <version>4.7.1.0</version>
+        <version>4.7.1.1</version>
       </plugin>
       <plugin>
         <groupId>org.jacoco</groupId>
@@ -146,7 +146,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-project-info-reports-plugin</artifactId>
-        <version>3.3.0</version>
+        <version>3.4.1</version>
         <configuration>
           <dependencyLocationsEnabled>false</dependencyLocationsEnabled>
         </configuration>
@@ -288,7 +288,7 @@
         <plugins>
           <plugin>
             <artifactId>maven-resources-plugin</artifactId>
-            <version>3.2.0</version>
+            <version>3.3.0</version>
             <executions>
               <execution>
                 <id>copy-resources</id>
