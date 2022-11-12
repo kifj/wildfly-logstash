@@ -26,10 +26,10 @@ import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 import java.util.logging.LogRecord;
 
-import javax.json.Json;
-import javax.json.JsonArrayBuilder;
-import javax.json.JsonBuilderFactory;
-import javax.json.JsonObjectBuilder;
+import jakarta.json.Json;
+import jakarta.json.JsonArrayBuilder;
+import jakarta.json.JsonBuilderFactory;
+import jakarta.json.JsonObjectBuilder;
 
 import org.jboss.logmanager.ExtFormatter;
 import org.jboss.logmanager.ExtLogRecord;
@@ -262,8 +262,8 @@ public class LogstashUtilFormatter extends ExtFormatter {
   public boolean isPrettyPrint() {
     Map<String, Object> config = (Map<String, Object>) jsonBuilder.getConfigInUse();
     synchronized (config) {
-      return config.containsKey(javax.json.stream.JsonGenerator.PRETTY_PRINTING)
-          && (Boolean) config.get(javax.json.stream.JsonGenerator.PRETTY_PRINTING);
+      return config.containsKey(jakarta.json.stream.JsonGenerator.PRETTY_PRINTING)
+          && (Boolean) config.get(jakarta.json.stream.JsonGenerator.PRETTY_PRINTING);
     }
   }
 
@@ -277,9 +277,9 @@ public class LogstashUtilFormatter extends ExtFormatter {
   public void setPrettyPrint(final boolean b) {
     synchronized (CONFIG) {
       if (b) {
-        CONFIG.put(javax.json.stream.JsonGenerator.PRETTY_PRINTING, Boolean.TRUE);
+        CONFIG.put(jakarta.json.stream.JsonGenerator.PRETTY_PRINTING, Boolean.TRUE);
       } else {
-        CONFIG.remove(javax.json.stream.JsonGenerator.PRETTY_PRINTING);
+        CONFIG.remove(jakarta.json.stream.JsonGenerator.PRETTY_PRINTING);
       }
       jsonBuilder = Json.createBuilderFactory(CONFIG);
     }

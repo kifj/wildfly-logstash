@@ -6,6 +6,6 @@
   <dependencies>
     <module name="org.jboss.logmanager" />
     <module name="org.jboss.logging" />
-    <module name="javax.json.api" />
+    <module name="jakarta.json.api" />
   </dependencies>
 </module>

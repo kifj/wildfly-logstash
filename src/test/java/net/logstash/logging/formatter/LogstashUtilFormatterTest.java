@@ -21,9 +21,9 @@ import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 
-import javax.json.Json;
-import javax.json.JsonArrayBuilder;
-import javax.json.JsonObjectBuilder;
+import jakarta.json.Json;
+import jakarta.json.JsonArrayBuilder;
+import jakarta.json.JsonObjectBuilder;
 
 import static org.junit.Assert.*;
 
