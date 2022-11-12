@@ -22,4 +22,4 @@ jobs:
         if: always()
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          files: target/**/TEST-*.xml
+          junit_files: target/**/TEST-*.xml
