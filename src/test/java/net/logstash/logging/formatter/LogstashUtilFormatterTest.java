@@ -16,6 +16,7 @@ package net.logstash.logging.formatter;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.util.Date;
 import java.util.Locale;
 import java.util.logging.Level;
@@ -25,12 +26,11 @@ import jakarta.json.Json;
 import jakarta.json.JsonArrayBuilder;
 import jakarta.json.JsonObjectBuilder;
 
-import static org.junit.Assert.*;
-
 import org.jboss.logmanager.ExtLogRecord;
 import org.jboss.logmanager.ExtLogRecord.FormatStyle;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class LogstashUtilFormatterTest {
 
@@ -54,14 +54,14 @@ public class LogstashUtilFormatterTest {
     }
   }
 
-  @Before
+  @BeforeEach
   public void setUp() {
     long millis = System.currentTimeMillis();
     record = new LogRecord(Level.ALL, "Junit Test");
     record.setLoggerName(LogstashUtilFormatter.class.getName());
     record.setSourceClassName(LogstashUtilFormatter.class.getName());
     record.setSourceMethodName("testMethod");
-    record.setMillis(millis);
+    record.setInstant(Instant.ofEpochMilli(millis));
 
     ex = new Exception("That is an exception");
     StackTraceElement[] stackTrace = new StackTraceElement[1];
@@ -242,7 +242,7 @@ public class LogstashUtilFormatterTest {
     extLogRecord.setSourceClassName(record.getSourceClassName());
     extLogRecord.setSourceMethodName(record.getSourceMethodName());
     extLogRecord.setLoggerName(record.getLoggerName());
-    extLogRecord.setMillis(record.getMillis());
+    extLogRecord.setInstant(record.getInstant());
     extLogRecord.setThrown(record.getThrown());
 
     String result = instance.format(extLogRecord);
