@@ -1,13 +1,12 @@
 package net.logstash.logging.handler;
 
-import static org.junit.Assert.*;
-
 import java.io.ByteArrayOutputStream;
 import java.util.logging.Level;
 
 import org.jboss.logmanager.ExtLogRecord;
 import org.jboss.logmanager.handlers.ConsoleHandler;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
 import net.logstash.logging.formatter.LogstashUtilFormatter;
 import net.logstash.logging.handler.SocketHandler.Protocol;

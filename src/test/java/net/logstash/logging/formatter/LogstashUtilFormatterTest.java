@@ -25,12 +25,11 @@ import javax.json.Json;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObjectBuilder;
 
-import static org.junit.Assert.*;
-
 import org.jboss.logmanager.ExtLogRecord;
 import org.jboss.logmanager.ExtLogRecord.FormatStyle;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class LogstashUtilFormatterTest {
 
@@ -54,7 +53,7 @@ public class LogstashUtilFormatterTest {
     }
   }
 
-  @Before
+  @BeforeEach
   public void setUp() {
     long millis = System.currentTimeMillis();
     record = new LogRecord(Level.ALL, "Junit Test");
