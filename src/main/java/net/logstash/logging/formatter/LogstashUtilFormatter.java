@@ -158,10 +158,10 @@ public class LogstashUtilFormatter extends ExtFormatter {
    * @return objectBuilder
    */
   protected final JsonObjectBuilder encodeFields(final LogRecord record) {
-    JsonObjectBuilder builder = jsonBuilder.createObjectBuilder();
-    builder.add("timestamp", record.getMillis());
-    builder.add("level", record.getLevel().toString());
-    builder.add("line_number", getLineNumber(record));
+    JsonObjectBuilder builder = jsonBuilder.createObjectBuilder()
+      .add("timestamp", record.getMillis())
+      .add("level", record.getLevel().toString())
+      .add("line_number", getLineNumber(record));
     addSourceClassName(record, builder);
     addSourceMethodName(record, builder);
     addThrowableInfo(record, builder);
@@ -224,23 +224,24 @@ public class LogstashUtilFormatter extends ExtFormatter {
     return lineNumber;
   }
 
-  protected final void addValue(final JsonObjectBuilder builder, final String key, final String value) {
+  protected final JsonObjectBuilder addValue(final JsonObjectBuilder builder, final String key, final String value) {
     if (value != null) {
       builder.add(key, value);
     } else {
       builder.add(key, "null");
     }
+    return builder;
   }
 
-  private void addSourceMethodName(final LogRecord record, final JsonObjectBuilder builder) {
-    addValue(builder, "method", record.getSourceMethodName());
+  private JsonObjectBuilder addSourceMethodName(final LogRecord record, final JsonObjectBuilder builder) {
+    return addValue(builder, "method", record.getSourceMethodName());
   }
 
-  private void addSourceClassName(final LogRecord record, final JsonObjectBuilder builder) {
-    addValue(builder, "class", record.getSourceClassName());
+  private JsonObjectBuilder addSourceClassName(final LogRecord record, final JsonObjectBuilder builder) {
+    return addValue(builder, "class", record.getSourceClassName());
   }
 
-  private void addStacktraceElements(final LogRecord record, final JsonObjectBuilder builder) {
+  private JsonObjectBuilder addStacktraceElements(final LogRecord record, final JsonObjectBuilder builder) {
     Throwable t = record.getThrown();
     // print whole stacktrace including message, class and cause
     if (t != null && t.getStackTrace().length > 0) {
@@ -251,6 +252,7 @@ public class LogstashUtilFormatter extends ExtFormatter {
       pw.close();
       builder.add("stacktrace", sw.toString());
     }
+    return builder;
   }
 
   /**
