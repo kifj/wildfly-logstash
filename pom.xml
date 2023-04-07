@@ -52,7 +52,7 @@
       <url>https://www.x1/nexus/repository/x1-repo</url>
     </repository>
     <snapshotRepository>
-      <id>x1-snapshot-repo</id>
+      <id>x1-snapshots</id>
       <url>https://www.x1/nexus/repository/x1-snapshots</url>
     </snapshotRepository>
   </distributionManagement>
