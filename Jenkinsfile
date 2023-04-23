@@ -19,7 +19,7 @@ pipeline {
       steps {
         withCredentials([usernameColonPassword(credentialsId: 'nexus', variable: 'USERPASS')]) {
           sh '''
-            mvn -Prpm deploy site-deploy -DskipTests'
+            mvn -Prpm deploy site-deploy -DskipTests
             curl -u "$USERPASS" --upload-file target/rpm/wildfly-logstash/RPMS/noarch/wildfly-logstash-*.noarch.rpm https://www.x1/nexus/repository/x1-extra-rpms/testing/
           '''
         }
