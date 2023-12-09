@@ -4,7 +4,7 @@
   <artifactId>wildfly-logstash</artifactId>
   <version>1.1.1-SNAPSHOT</version>
   <name>wildfly-logstash</name>
-  <description>Logstash / Filebeat appender for JBoss Wildfly</description>
+  <description>Logstash / Filebeat appender for JBoss / Wildfly</description>
   <url>https://github.com/kifj/wildfly-logstash</url>
   <inceptionYear>2015</inceptionYear>
   <scm>
