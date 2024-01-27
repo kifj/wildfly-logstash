@@ -115,7 +115,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
-        <version>3.2.3</version>
+        <version>3.2.5</version>
         <configuration>
           <systemPropertyVariables>
             <jacoco-agent.destfile>target/jacoco.exec</jacoco-agent.destfile>
@@ -182,7 +182,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-report-plugin</artifactId>
-        <version>3.2.3</version>
+        <version>3.2.5</version>
         <configuration>
           <testFailureIgnore>true</testFailureIgnore>
         </configuration>
