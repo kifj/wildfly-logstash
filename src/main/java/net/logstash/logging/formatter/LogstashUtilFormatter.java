@@ -54,13 +54,14 @@ public class LogstashUtilFormatter extends ExtFormatter {
 
   @Override
   public final String format(final ExtLogRecord record) {
-    SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
-    String dateString = dateFormat.format(new Date(record.getMillis()));
-
     String message = formatExtRecord(record);
     if (message == null) {
       return null;
     }
+    
+    SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
+    String dateString = dateFormat.format(new Date(record.getMillis()));
+
     JsonObjectBuilder builder = jsonBuilder.createObjectBuilder().add("@timestamp", dateString).add("@message", message)
         .add("@source", record.getLoggerName()).add("@source_host", hostName).add("@fields", encodeFields(record));
 
