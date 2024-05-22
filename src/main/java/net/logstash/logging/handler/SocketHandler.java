@@ -382,8 +382,9 @@ public class SocketHandler extends ExtHandler {
           SslTcpOutputStream sos = new SslTcpOutputStream(address, port);
           if (sos.isConnected()) {
             return sos;
+          } else {
+            throw new IOException("Could not establish connection to " + address + ":" + port);
           }
-          break;
         case UDP:
           return new UdpOutputStream(address, port);
         case TCP:
@@ -391,8 +392,9 @@ public class SocketHandler extends ExtHandler {
           TcpOutputStream tos = new TcpOutputStream(address, port);
           if (tos.isConnected()) {
             return tos;
+          } else {
+            throw new IOException("Could not establish connection to " + address + ":" + port);
           }
-          break;
         }
       } catch (IOException e) {
         reportError("Failed to create socket output stream", e, ErrorManager.OPEN_FAILURE);
