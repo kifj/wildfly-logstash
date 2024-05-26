@@ -17,7 +17,7 @@ pipeline {
         }
       }
       steps {
-        sh 'mvn -B clean package'
+        sh '$MAVEN_HOME/bin/mvn -B clean package'
       }
     }
     stage('Publish') {
