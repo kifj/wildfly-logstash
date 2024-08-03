@@ -18,6 +18,9 @@ pipeline {
       }
       steps {
         sh '$MAVEN_HOME/bin/mvn -B clean package'
+        junit '**/target/surefire-reports/TEST-*.xml'
+        jacoco(execPattern: '**/**.exec')
+        stash name: 'coverage', includes: '**/**.exec'
       }
     }
     stage('Publish') {
@@ -30,6 +33,7 @@ pipeline {
             mvn -B -Prpm deploy site-deploy -DskipTests
             curl -u "$USERPASS" --upload-file target/rpm/wildfly-logstash/RPMS/noarch/wildfly-logstash-*.noarch.rpm https://www.x1/nexus/repository/x1-extra-rpms/testing/
           '''
+          recordIssues tools: [spotBugs(pattern: 'target/spotbugsXml.xml')]
         }
       }
     }
@@ -40,12 +44,6 @@ pipeline {
       steps {
         sh 'mvn sonar:sonar -DskipTests -Dsonar.java.coveragePlugin=jacoco -Dsonar.jacoco.reportPath=target/jacoco.exec -Dsonar.host.url=https://www.x1/sonar'
       }
-    }
-  }
-  post {
-    always {
-      junit '**/target/surefire-reports/TEST-*.xml'
-      jacoco(execPattern: '**/**.exec')
     }
   }
 }
