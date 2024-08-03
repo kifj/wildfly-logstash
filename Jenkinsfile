@@ -17,10 +17,10 @@ pipeline {
         }
       }
       steps {
-        sh '$MAVEN_HOME/bin/mvn -B clean package'
+        sh '$MAVEN_HOME/bin/mvn -B clean package jacoco:report'
         junit '**/target/surefire-reports/TEST-*.xml'
         jacoco(execPattern: '**/**.exec')
-        stash name: 'coverage', includes: '**/**.exec'
+        stash name: 'coverage', includes: '**/jacoco.xml'
       }
     }
     stage('Publish') {
