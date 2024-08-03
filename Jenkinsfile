@@ -29,6 +29,7 @@ pipeline {
       }
       steps {
         withCredentials([usernameColonPassword(credentialsId: 'nexus', variable: 'USERPASS')]) {
+          unstash name: 'coverage' 
           sh '''
             mvn -B -Prpm deploy site-deploy -DskipTests
             curl -u "$USERPASS" --upload-file target/rpm/wildfly-logstash/RPMS/noarch/wildfly-logstash-*.noarch.rpm https://www.x1/nexus/repository/x1-extra-rpms/testing/
@@ -42,6 +43,7 @@ pipeline {
         jdk 'JDK-17'
       }
       steps {
+        unstash name: 'coverage' 
         sh 'mvn sonar:sonar -DskipTests -Dsonar.java.coveragePlugin=jacoco -Dsonar.jacoco.reportPath=target/jacoco.exec -Dsonar.host.url=https://www.x1/sonar'
       }
     }
