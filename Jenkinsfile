@@ -38,6 +38,7 @@ pipeline {
     always {
       junit '**/target/surefire-reports/TEST-*.xml'
       recordIssues tools: [spotBugs(pattern: 'target/spotbugsXml.xml')]
+      recordCoverage(tools: [[parser: 'JACOCO']])
     }
   }
 }
