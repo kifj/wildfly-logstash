@@ -37,7 +37,6 @@ pipeline {
   post {
     always {
       junit '**/target/surefire-reports/TEST-*.xml'
-      jacoco(execPattern: '**/**.exec')
       recordIssues tools: [spotBugs(pattern: 'target/spotbugsXml.xml')]
     }
   }
