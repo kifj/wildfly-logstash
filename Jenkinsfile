@@ -25,7 +25,7 @@ pipeline {
     }
     stage('Publish') {
       tools {
-        jdk 'JDK-17'
+        jdk 'JDK-21'
       }
       steps {
         withCredentials([usernameColonPassword(credentialsId: 'nexus', variable: 'USERPASS')]) {
