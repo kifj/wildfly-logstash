@@ -40,7 +40,7 @@ pipeline {
     }
     stage('Sonar') {
       tools {
-        jdk 'JDK-17'
+        jdk 'JDK-21'
       }
       steps {
         unstash name: 'coverage' 
